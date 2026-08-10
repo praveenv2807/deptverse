@@ -1,0 +1,47 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const cors_1 = __importDefault(require("cors"));
+const dotenv_1 = __importDefault(require("dotenv"));
+const auth_js_1 = require("./routes/auth.js");
+const health_js_1 = require("./routes/health.js");
+const students_js_1 = require("./routes/students.js");
+const attendance_js_1 = require("./routes/attendance.js");
+const results_js_1 = require("./routes/results.js");
+const timetable_js_1 = require("./routes/timetable.js");
+const fee_js_1 = require("./routes/fee.js");
+const stats_js_1 = require("./routes/stats.js");
+const placement_js_1 = require("./routes/placement.js");
+const faculty_js_1 = require("./routes/faculty.js");
+const announcements_js_1 = require("./routes/announcements.js");
+const leave_js_1 = require("./routes/leave.js");
+const od_js_1 = require("./routes/od.js");
+dotenv_1.default.config();
+const app = (0, express_1.default)();
+const PORT = process.env.PORT || 5000;
+app.use((0, cors_1.default)());
+app.use(express_1.default.json());
+app.use('/api/auth', auth_js_1.authRouter);
+app.use('/api/health', health_js_1.healthRouter);
+app.use('/api/students', students_js_1.studentsRouter);
+app.use('/api/attendance', attendance_js_1.attendanceRouter);
+app.use('/api/results', results_js_1.resultsRouter);
+app.use('/api/timetable', timetable_js_1.timetableRouter);
+app.use('/api/fee', fee_js_1.feeRouter);
+app.use('/api/stats', stats_js_1.statsRouter);
+app.use('/api/placement', placement_js_1.placementRouter);
+app.use('/api/faculty', faculty_js_1.facultyRouter);
+app.use('/api/announcements', announcements_js_1.announcementRouter);
+app.use('/api/leave', leave_js_1.leaveRouter);
+app.use('/api/od', od_js_1.odRouter);
+app.use((err, _req, res, _next) => {
+    console.error(err.stack);
+    res.status(500).json({ error: 'Something went wrong!' });
+});
+app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+});
+exports.default = app;
