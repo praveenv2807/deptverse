@@ -1,25 +1,27 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { Menu, X, GraduationCap, ChevronDown } from 'lucide-react'
+import { Link, useLocation } from 'react-router-dom'
+import { Menu, X, ChevronDown } from 'lucide-react'
+import Logo from './Logo'
 
 const navItems = [
     { label: 'Home', path: '/' },
     {
-        label: 'About', path: '/about',
+        label: 'About',
         dropdown: [
             { label: 'Vision & Mission', path: '/about#vision' },
             { label: "HoD's Message", path: '/about#hod' },
             { label: 'Department History', path: '/about#history' },
+            { label: 'Accreditations', path: '/about#accreditations' },
         ]
     },
     { label: 'Programs', path: '/programs' },
     { label: 'Faculty', path: '/faculty' },
     {
-        label: 'Academics', path: '#',
+        label: 'Academics',
         dropdown: [
             { label: 'Curriculum & Labs', path: '/curriculum-labs' },
             { label: 'Research', path: '/research' },
-            { label: 'eLearning', path: '/elearning' },
+            { label: 'Programming Practice', path: '/practice' },
         ]
     },
     { label: 'Placements', path: '/placements' },
@@ -32,7 +34,6 @@ export default function Navbar() {
     const [scrolled, setScrolled] = useState(false)
     const [openDropdown, setOpenDropdown] = useState(null)
     const location = useLocation()
-    const navigate = useNavigate()
 
     useEffect(() => {
         const handleScroll = () => setScrolled(window.scrollY > 20)
@@ -41,103 +42,105 @@ export default function Navbar() {
     }, [])
 
     useEffect(() => {
-        setIsOpen(false)
-        setOpenDropdown(null)
-    }, [location])
+        if (isOpen) setIsOpen(false)
+    }, [location, isOpen])
 
     return (
-        <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-primary/95 backdrop-blur-md shadow-lg border-b border-white/5' : 'bg-transparent'
+        <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-slate-900/95 shadow-lg backdrop-blur-md' : 'bg-slate-900/90 backdrop-blur-sm'
             }`}>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex items-center justify-between h-16">
-                    {/* Logo */}
+                <div className="flex items-center justify-between h-16 border-b border-white/10">
                     <Link to="/" className="flex items-center gap-2 group">
-                        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-accent-blue to-accent-violet flex items-center justify-center shadow-glow group-hover:scale-110 transition-transform">
-                            <GraduationCap className="w-5 h-5 text-white" />
-                        </div>
-                        <div>
-                            <span className="text-white font-heading font-bold text-lg leading-none">Dept<span className="gradient-text">Verse</span></span>
-                            <p className="text-slate-400 text-xs leading-none">CSE Department</p>
-                        </div>
+                        <Logo size="sm" />
                     </Link>
 
-                    {/* Desktop Nav */}
                     <div className="hidden lg:flex items-center gap-1">
                         {navItems.map((item) => (
-                            <div key={item.label} className="relative group">
-                                <button
-                                    onMouseEnter={() => item.dropdown && setOpenDropdown(item.label)}
-                                    onMouseLeave={() => setOpenDropdown(null)}
-                                    onClick={() => !item.dropdown && navigate(item.path)}
-                                    className={`nav-link flex items-center gap-1 px-3 py-2 rounded-lg hover:bg-white/5 ${location.pathname === item.path ? 'text-accent-blue' : ''
-                                        }`}
-                                >
-                                    {item.label}
-                                    {item.dropdown && <ChevronDown className="w-3 h-3" />}
-                                </button>
-                                {item.dropdown && openDropdown === item.label && (
-                                    <div
-                                        onMouseEnter={() => setOpenDropdown(item.label)}
-                                        onMouseLeave={() => setOpenDropdown(null)}
-                                        className="absolute top-full left-0 mt-1 w-52 glass-card py-2 shadow-glass animate-fade-in"
+                            <div key={item.label} className="relative">
+                                {item.dropdown ? (
+                                    <>
+                                        <button
+                                            onClick={() => setOpenDropdown(openDropdown === item.label ? null : item.label)}
+                                            className={`nav-link flex items-center gap-1 px-3 py-2 rounded-lg ${openDropdown === item.label ? 'text-blue-300 bg-white/10' : 'text-white/80 hover:text-white hover:bg-white/5'}`}
+                                        >
+                                            {item.label}
+                                            <ChevronDown className={`w-3 h-3 transition-transform ${openDropdown === item.label ? 'rotate-180' : ''}`} />
+                                        </button>
+                                        <div className={`absolute top-full left-0 mt-1 w-52 bg-slate-900/95 backdrop-blur-md rounded-lg shadow-xl py-2 transition-all duration-200 border border-white/10 ${openDropdown === item.label ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'}`}>
+                                            {item.dropdown.map((sub) => (
+                                                <Link key={sub.label} to={sub.path}
+                                                    onClick={() => setOpenDropdown(null)}
+                                                    className="block px-4 py-2 text-sm text-white/70 hover:text-blue-300 hover:bg-white/5 transition-colors">
+                                                    {sub.label}
+                                                </Link>
+                                            ))}
+                                        </div>
+                                    </>
+                                ) : (
+                                    <Link
+                                        to={item.path}
+                                        className={`nav-link flex items-center gap-1 px-3 py-2 rounded-lg ${location.pathname === item.path ? 'text-blue-300 bg-white/10' : 'text-white/80 hover:text-white hover:bg-white/5'}`}
                                     >
-                                        {item.dropdown.map((sub) => (
-                                            <Link key={sub.label} to={sub.path}
-                                                className="block px-4 py-2 text-sm text-slate-300 hover:text-accent-blue hover:bg-white/5 transition-colors">
-                                                {sub.label}
-                                            </Link>
-                                        ))}
-                                    </div>
+                                        {item.label}
+                                    </Link>
                                 )}
                             </div>
                         ))}
                     </div>
 
-                    {/* CTA Buttons */}
                     <div className="hidden lg:flex items-center gap-3">
                         <Link to="/login"
-                            className="text-slate-300 hover:text-white text-sm font-medium transition-colors px-3 py-2">
+                            className="text-white/70 hover:text-white text-sm font-medium transition-colors px-3 py-2">
                             Sign In
                         </Link>
                         <Link to="/login"
-                            className="btn-primary text-sm px-5 py-2">
+                            className="bg-blue-500 hover:bg-blue-600 text-white text-sm px-5 py-2 rounded-lg font-medium transition-colors">
                             Portal Login
                         </Link>
                     </div>
 
-                    {/* Mobile toggle */}
                     <button onClick={() => setIsOpen(!isOpen)}
-                        className="lg:hidden p-2 rounded-lg text-slate-300 hover:bg-white/5">
+                        className="lg:hidden p-2 rounded-lg text-white/70 hover:bg-white/10">
                         {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
                     </button>
                 </div>
             </div>
 
-            {/* Mobile Menu */}
             {isOpen && (
-                <div className="lg:hidden bg-primary/98 backdrop-blur-md border-t border-white/5 animate-slide-up">
+                <div className="lg:hidden bg-slate-900/95 backdrop-blur-md border-t border-white/10 animate-slide-up">
                     <div className="px-4 py-4 space-y-1 max-h-[80vh] overflow-y-auto">
                         {navItems.map((item) => (
                             <div key={item.label}>
-                                <Link to={item.dropdown ? '#' : item.path}
-                                    className={`block px-4 py-3 rounded-xl text-slate-300 hover:bg-white/5 hover:text-white font-medium ${location.pathname === item.path ? 'text-accent-blue bg-white/5' : ''
-                                        }`}>
-                                    {item.label}
-                                </Link>
-                                {item.dropdown && (
-                                    <div className="ml-4 mt-1 space-y-1">
-                                        {item.dropdown.map((sub) => (
-                                            <Link key={sub.label} to={sub.path}
-                                                className="block px-4 py-2 text-sm text-slate-400 hover:text-accent-blue">
-                                                → {sub.label}
-                                            </Link>
-                                        ))}
-                                    </div>
+                                {item.dropdown ? (
+                                    <>
+                                        <button
+                                            onClick={() => setOpenDropdown(openDropdown === item.label ? null : item.label)}
+                                            className={`w-full text-left block px-4 py-3 rounded-lg text-white/80 hover:text-white hover:bg-white/5 font-medium ${openDropdown === item.label ? 'text-blue-300 bg-white/10' : ''}`}
+                                        >
+                                            {item.label}
+                                        </button>
+                                        {openDropdown === item.label && (
+                                            <div className="ml-4 mt-1 space-y-1">
+                                                {item.dropdown.map((sub) => (
+                                                    <Link key={sub.label} to={sub.path} onClick={() => { setOpenDropdown(null); setIsOpen(false); }}
+                                                        className="block px-4 py-2 text-sm text-white/60 hover:text-blue-300">
+                                                        {sub.label}
+                                                    </Link>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </>
+                                ) : (
+                                    <Link to={item.path} onClick={() => setIsOpen(false)}
+                                        className={`block px-4 py-3 rounded-lg text-white/80 hover:text-white hover:bg-white/5 font-medium ${location.pathname === item.path ? 'text-blue-300 bg-white/10' : ''
+                                            }`}>
+                                        {item.label}
+                                    </Link>
                                 )}
                             </div>
                         ))}
                         <div className="pt-4 border-t border-white/10 flex gap-3">
-                            <Link to="/login" className="flex-1 btn-primary text-center text-sm">Portal Login</Link>
+                            <Link to="/login" className="flex-1 bg-blue-500 hover:bg-blue-600 text-white text-center text-sm py-2 rounded-lg font-medium">Portal Login</Link>
                         </div>
                     </div>
                 </div>

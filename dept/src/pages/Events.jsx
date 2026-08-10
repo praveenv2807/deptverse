@@ -12,11 +12,11 @@ const events = [
 ]
 
 const typeColors = {
-    Workshop: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
-    Symposium: 'bg-violet-500/20 text-violet-400 border-violet-500/30',
-    Seminar: 'bg-teal-500/20 text-teal-400 border-teal-500/30',
-    Hackathon: 'bg-orange-500/20 text-orange-400 border-orange-500/30',
-    Alumni: 'bg-pink-500/20 text-pink-400 border-pink-500/30',
+    Workshop: 'bg-blue-500/50 text-blue-200',
+    Symposium: 'bg-purple-500/50 text-purple-200',
+    Seminar: 'bg-green-500/50 text-green-200',
+    Hackathon: 'bg-orange-500/50 text-orange-200',
+    Alumni: 'bg-pink-500/50 text-pink-200',
 }
 
 export default function Events() {
@@ -27,22 +27,28 @@ export default function Events() {
     const filtered = filter === 'All' ? events : events.filter(e => e.type === filter)
 
     return (
-        <div className="pt-20">
-            <section className="section-pad bg-gradient-to-br from-primary via-primary-light to-primary">
+        <div className="min-h-screen" style={{
+            backgroundImage: 'url(/bg-login.jpg)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            backgroundAttachment: 'fixed'
+        }}>
+            <section className="bg-gradient-to-br from-black/60 via-black/50 to-black/60 py-20 px-4 md:px-8 lg:px-16">
                 <div className="max-w-4xl mx-auto text-center">
                     <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}>
-                        <h1 className="text-5xl font-heading font-bold text-white mb-6">Events & <span className="gradient-text">Gallery</span></h1>
-                        <p className="text-slate-400 text-xl">Workshops, seminars, hackathons, and more — learn beyond the classroom.</p>
+                        <h1 className="text-4xl font-heading font-bold text-white mb-6">Events & <span className="text-blue-300">Gallery</span></h1>
+                        <p className="text-white/80 text-xl">Workshops, seminars, hackathons, and more — learn beyond the classroom.</p>
                     </motion.div>
                 </div>
             </section>
 
-            <section className="section-pad">
-                <div className="max-w-7xl mx-auto">
+            <section>
+                <div className="max-w-7xl mx-auto py-16 px-4 md:px-8 lg:px-16">
                     <div className="flex flex-wrap justify-center gap-3 mb-10">
                         {types.map((t) => (
                             <button key={t} onClick={() => setFilter(t)}
-                                className={`px-5 py-2 rounded-xl text-sm font-medium transition-all ${filter === t ? 'bg-gradient-to-r from-accent-blue to-accent-violet text-white shadow-glow' : 'glass-card text-slate-400 hover:text-white'
+                                className={`px-5 py-2 rounded-lg text-sm font-medium transition-all ${filter === t ? 'bg-blue-500 text-white' : 'bg-slate-900/80 backdrop-blur-md text-white hover:bg-slate-800/80 border border-white/10'
                                     }`}>
                                 {t}
                             </button>
@@ -54,18 +60,18 @@ export default function Events() {
                             <motion.div key={event.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: i * 0.07 }}
                                 onClick={() => setSelected(event)}
-                                className="glass-card p-6 cursor-pointer hover:border-accent-blue/40 hover:-translate-y-1 transition-all duration-300">
+                                className="bg-slate-900/80 backdrop-blur-md rounded-xl shadow-lg p-6 cursor-pointer hover:shadow-xl transition-all border border-white/10">
                                 <div className="flex items-center justify-between mb-4">
-                                    <span className={`text-xs px-3 py-1 rounded-full border font-medium ${typeColors[event.type]}`}>
+                                    <span className={`text-xs px-3 py-1 rounded-full font-medium ${typeColors[event.type]}`}>
                                         {event.type}
                                     </span>
-                                    <span className={`text-xs font-medium ${event.status === 'Upcoming' ? 'text-green-400' : 'text-slate-500'}`}>
+                                    <span className={`text-xs font-medium ${event.status === 'Upcoming' ? 'text-green-400' : 'text-white/40'}`}>
                                         • {event.status}
                                     </span>
                                 </div>
                                 <h3 className="text-white font-semibold font-heading mb-3">{event.title}</h3>
-                                <p className="text-slate-400 text-sm line-clamp-2 mb-4">{event.description}</p>
-                                <div className="space-y-1 text-xs text-slate-500">
+                                <p className="text-white/60 text-sm line-clamp-2 mb-4">{event.description}</p>
+                                <div className="space-y-1 text-xs text-white/50">
                                     <div className="flex items-center gap-2"><Calendar className="w-3 h-3" />{event.date}</div>
                                     <div className="flex items-center gap-2"><MapPin className="w-3 h-3" />{event.venue}</div>
                                     <div className="flex items-center gap-2"><Users className="w-3 h-3" />{event.participants} participants</div>
@@ -76,31 +82,30 @@ export default function Events() {
                 </div>
             </section>
 
-            {/* Modal */}
             {selected && (
-                <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setSelected(null)}>
+                <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4" onClick={() => setSelected(null)}>
                     <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
-                        className="glass-card w-full max-w-lg p-8 relative" onClick={e => e.stopPropagation()}>
-                        <button onClick={() => setSelected(null)} className="absolute top-4 right-4 p-2 hover:bg-white/10 rounded-lg text-slate-400">
+                        className="bg-slate-900/95 backdrop-blur-md w-full max-w-lg rounded-xl shadow-lg p-8 relative border border-white/10" onClick={e => e.stopPropagation()}>
+                        <button onClick={() => setSelected(null)} className="absolute top-4 right-4 p-2 hover:bg-slate-800 rounded-lg text-white/60">
                             <X className="w-5 h-5" />
                         </button>
-                        <span className={`text-xs px-3 py-1 rounded-full border font-medium mb-4 inline-block ${typeColors[selected.type]}`}>{selected.type}</span>
+                        <span className={`text-xs px-3 py-1 rounded-full font-medium mb-4 inline-block ${typeColors[selected.type]}`}>{selected.type}</span>
                         <h2 className="text-2xl font-heading font-bold text-white mb-3">{selected.title}</h2>
-                        <p className="text-slate-300 leading-relaxed mb-6">{selected.description}</p>
+                        <p className="text-white/70 leading-relaxed mb-6">{selected.description}</p>
                         <div className="grid grid-cols-3 gap-4 text-sm">
-                            <div className="glass-card p-3 text-center">
-                                <Calendar className="w-4 h-4 text-accent-blue mx-auto mb-1" />
-                                <p className="text-slate-400 text-xs">Date</p>
+                            <div className="bg-slate-800/60 p-3 rounded-lg text-center border border-white/10">
+                                <Calendar className="w-4 h-4 text-blue-400 mx-auto mb-1" />
+                                <p className="text-white/50 text-xs">Date</p>
                                 <p className="text-white text-xs font-medium">{selected.date}</p>
                             </div>
-                            <div className="glass-card p-3 text-center">
-                                <MapPin className="w-4 h-4 text-accent-violet mx-auto mb-1" />
-                                <p className="text-slate-400 text-xs">Venue</p>
+                            <div className="bg-slate-800/60 p-3 rounded-lg text-center border border-white/10">
+                                <MapPin className="w-4 h-4 text-purple-400 mx-auto mb-1" />
+                                <p className="text-white/50 text-xs">Venue</p>
                                 <p className="text-white text-xs font-medium">{selected.venue}</p>
                             </div>
-                            <div className="glass-card p-3 text-center">
-                                <Users className="w-4 h-4 text-accent-teal mx-auto mb-1" />
-                                <p className="text-slate-400 text-xs">Participants</p>
+                            <div className="bg-slate-800/60 p-3 rounded-lg text-center border border-white/10">
+                                <Users className="w-4 h-4 text-green-400 mx-auto mb-1" />
+                                <p className="text-white/50 text-xs">Participants</p>
                                 <p className="text-white text-xs font-medium">{selected.participants}</p>
                             </div>
                         </div>

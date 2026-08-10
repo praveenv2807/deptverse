@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Monitor, Cpu, Wifi, Server } from 'lucide-react'
+import { Monitor, Cpu } from 'lucide-react'
 import { labs } from '../data/data'
 
 const semesters = {
@@ -18,25 +18,30 @@ export default function CurriculumLabs() {
     const [activeSem, setActiveSem] = useState('Semester 1')
 
     return (
-        <div className="pt-20">
-            <section className="section-pad bg-gradient-to-br from-primary via-primary-light to-primary">
+        <div className="min-h-screen" style={{
+            backgroundImage: 'url(/bg-login.jpg)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            backgroundAttachment: 'fixed'
+        }}>
+            <section className="bg-gradient-to-br from-black/60 via-black/50 to-black/60 py-20 px-4 md:px-8 lg:px-16">
                 <div className="max-w-4xl mx-auto text-center">
                     <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}>
-                        <h1 className="text-5xl font-heading font-bold text-white mb-6">Curriculum & <span className="gradient-text">Labs</span></h1>
-                        <p className="text-slate-400 text-xl">Comprehensive syllabus and world-class laboratory infrastructure.</p>
+                        <h1 className="text-4xl font-heading font-bold text-white mb-6">Curriculum & <span className="text-blue-300">Labs</span></h1>
+                        <p className="text-white/80 text-xl">Comprehensive syllabus and world-class laboratory infrastructure.</p>
                     </motion.div>
                 </div>
             </section>
 
-            {/* Curriculum */}
-            <section className="section-pad">
-                <div className="max-w-7xl mx-auto">
-                    <h2 className="section-title">Course <span className="gradient-text">Curriculum</span></h2>
-                    <p className="section-subtitle">B.E. CSE — Semester-wise subjects</p>
+            <section>
+                <div className="max-w-7xl mx-auto py-16 px-4 md:px-8 lg:px-16">
+                    <h2 className="text-3xl md:text-4xl font-bold font-heading text-white text-center mb-3">Course Curriculum</h2>
+                    <p className="text-white/60 text-center mb-12 text-lg">B.E. CSE — Semester-wise subjects</p>
                     <div className="flex flex-wrap justify-center gap-2 mb-8">
                         {Object.keys(semesters).map((sem) => (
                             <button key={sem} onClick={() => setActiveSem(sem)}
-                                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${activeSem === sem ? 'bg-gradient-to-r from-accent-blue to-accent-violet text-white shadow-glow' : 'glass-card text-slate-400 hover:text-white'
+                                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${activeSem === sem ? 'bg-blue-500 text-white' : 'bg-slate-900/80 backdrop-blur-md text-white hover:bg-slate-800/80 border border-white/10'
                                     }`}>
                                 {sem}
                             </button>
@@ -45,8 +50,8 @@ export default function CurriculumLabs() {
                     <motion.div key={activeSem} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                         className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto">
                         {semesters[activeSem].map((subject, i) => (
-                            <div key={subject} className="glass-card p-4 hover:border-accent-blue/30 transition-all hover:-translate-y-1">
-                                <div className="w-8 h-8 rounded-lg bg-accent-blue/20 flex items-center justify-center text-accent-blue font-bold text-sm mb-3">
+                            <div key={subject} className="bg-slate-900/80 backdrop-blur-md rounded-xl shadow-lg p-4 hover:shadow-xl transition-all border border-white/10">
+                                <div className="w-8 h-8 rounded-lg bg-blue-500/30 flex items-center justify-center text-blue-400 font-bold text-sm mb-3">
                                     {i + 1}
                                 </div>
                                 <p className="text-white text-sm font-medium">{subject}</p>
@@ -56,27 +61,26 @@ export default function CurriculumLabs() {
                 </div>
             </section>
 
-            {/* Labs */}
-            <section className="section-pad bg-primary-light/50">
-                <div className="max-w-7xl mx-auto">
-                    <h2 className="section-title">Our <span className="gradient-text">Laboratories</span></h2>
-                    <p className="section-subtitle">State-of-the-art facilities for hands-on learning</p>
+            <section>
+                <div className="max-w-7xl mx-auto py-16 px-4 md:px-8 lg:px-16">
+                    <h2 className="text-3xl md:text-4xl font-bold font-heading text-white text-center mb-3">Our Laboratories</h2>
+                    <p className="text-white/60 text-center mb-12 text-lg">State-of-the-art facilities for hands-on learning</p>
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {labs.map((lab, i) => (
                             <motion.div key={lab.name} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
                                 transition={{ delay: i * 0.1 }} viewport={{ once: true }}
-                                className="glass-card p-6 hover:border-accent-blue/30 transition-all hover:-translate-y-1">
-                                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-accent-blue to-accent-violet flex items-center justify-center mb-4">
-                                    <Monitor className="w-6 h-6 text-white" />
+                                className="bg-slate-900/80 backdrop-blur-md rounded-xl shadow-lg p-6 hover:shadow-xl transition-all border border-white/10">
+                                <div className="w-12 h-12 rounded-xl bg-blue-500/30 flex items-center justify-center mb-4">
+                                    <Monitor className="w-6 h-6 text-blue-400" />
                                 </div>
                                 <h3 className="text-white font-semibold font-heading mb-2">{lab.name}</h3>
-                                <div className="flex gap-4 text-sm text-slate-400 mb-3">
+                                <div className="flex gap-4 text-sm text-white/60 mb-3">
                                     <span><Cpu className="w-3 h-3 inline mr-1" />{lab.systems} Systems</span>
                                     <span>Est. {lab.year}</span>
                                 </div>
                                 <div className="flex flex-wrap gap-2">
                                     {lab.software.map((sw) => (
-                                        <span key={sw} className="text-xs bg-accent-blue/10 text-accent-blue border border-accent-blue/20 px-2 py-0.5 rounded-full">{sw}</span>
+                                        <span key={sw} className="text-xs bg-blue-500/30 text-blue-300 px-2 py-0.5 rounded-full">{sw}</span>
                                     ))}
                                 </div>
                             </motion.div>

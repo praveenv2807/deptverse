@@ -8,31 +8,38 @@ export default {
     extend: {
       colors: {
         primary: {
+          DEFAULT: '#1e40af',
+          dark: '#1e3a8a',
+          light: '#3b82f6',
+        },
+        secondary: {
           DEFAULT: '#0f172a',
-          light: '#1e293b',
-          lighter: '#334155',
+          light: '#334155',
+          lighter: '#64748b',
         },
         accent: {
-          blue: '#0ea5e9',
-          violet: '#7c3aed',
-          teal: '#14b8a6',
-          cyan: '#22d3ee',
+          DEFAULT: '#dc2626',
+          light: '#ef4444',
         },
-        glass: 'rgba(255,255,255,0.05)',
+        surface: {
+          DEFAULT: '#f8fafc',
+          secondary: '#f1f5f9',
+          card: '#ffffff',
+        },
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
         heading: ['Poppins', 'system-ui', 'sans-serif'],
       },
-      backdropBlur: {
-        xs: '2px',
+      boxShadow: {
+        card: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)',
+        'card-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
+        header: '0 2px 4px 0 rgba(0, 0, 0, 0.05)',
       },
       animation: {
         'fade-in': 'fadeIn 0.6s ease-in-out',
         'slide-up': 'slideUp 0.5s ease-out',
         'slide-right': 'slideRight 0.5s ease-out',
-        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-        'float': 'float 3s ease-in-out infinite',
       },
       keyframes: {
         fadeIn: {
@@ -47,15 +54,6 @@ export default {
           '0%': { opacity: '0', transform: 'translateX(-30px)' },
           '100%': { opacity: '1', transform: 'translateX(0)' },
         },
-        float: {
-          '0%, 100%': { transform: 'translateY(0px)' },
-          '50%': { transform: 'translateY(-10px)' },
-        },
-      },
-      boxShadow: {
-        glass: '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
-        glow: '0 0 20px rgba(14, 165, 233, 0.4)',
-        'glow-violet': '0 0 20px rgba(124, 58, 237, 0.4)',
       },
     },
   },

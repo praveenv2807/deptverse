@@ -13,7 +13,7 @@ const faqs = [
 export default function Chatbot() {
     const [isOpen, setIsOpen] = useState(false)
     const [messages, setMessages] = useState([
-        { from: 'bot', text: "👋 Hi! I'm DeptBot. How can I help you today?" }
+        { from: 'bot', text: "Hi! I'm DeptBot. How can I help you today?" }
     ])
     const [input, setInput] = useState('')
     const [showSuggestions, setShowSuggestions] = useState(true)
@@ -30,7 +30,6 @@ export default function Chatbot() {
         setInput('')
         setShowSuggestions(false)
 
-        // Find matching FAQ
         const matched = faqs.find(f =>
             f.q.toLowerCase().includes(text.toLowerCase()) ||
             text.toLowerCase().includes(f.q.toLowerCase().split(' ')[1] || '')
@@ -48,16 +47,16 @@ export default function Chatbot() {
             {/* Floating Button */}
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className={`fixed bottom-6 right-6 z-50 w-14 h-14 rounded-2xl bg-gradient-to-br from-accent-blue to-accent-violet shadow-glow flex items-center justify-center transition-all duration-300 hover:scale-110 ${isOpen ? 'rotate-0' : 'animate-float'}`}>
+                className={`fixed bottom-6 right-6 z-50 w-14 h-14 rounded-xl bg-primary shadow-card flex items-center justify-center transition-all duration-300 hover:bg-primary-dark ${isOpen ? '' : 'hover:-translate-y-1'}`}>
                 {isOpen ? <X className="w-6 h-6 text-white" /> : <MessageCircle className="w-6 h-6 text-white" />}
             </button>
 
             {/* Chat Panel */}
             {isOpen && (
-                <div className="fixed bottom-24 right-6 z-50 w-80 sm:w-96 glass-card shadow-glass overflow-hidden animate-slide-up flex flex-col" style={{ height: '460px' }}>
+                <div className="fixed bottom-24 right-6 z-50 w-80 sm:w-96 bg-white rounded-xl shadow-card overflow-hidden flex flex-col" style={{ height: '460px' }}>
                     {/* Header */}
-                    <div className="bg-gradient-to-r from-accent-blue to-accent-violet p-4 flex items-center gap-3">
-                        <div className="w-9 h-9 bg-white/20 rounded-xl flex items-center justify-center">
+                    <div className="bg-primary p-4 flex items-center gap-3">
+                        <div className="w-9 h-9 bg-white/20 rounded-lg flex items-center justify-center">
                             <Bot className="w-5 h-5 text-white" />
                         </div>
                         <div>
@@ -68,12 +67,12 @@ export default function Chatbot() {
                     </div>
 
                     {/* Messages */}
-                    <div className="flex-1 overflow-y-auto p-4 space-y-3">
+                    <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50">
                         {messages.map((msg, i) => (
                             <div key={i} className={`flex ${msg.from === 'user' ? 'justify-end' : 'justify-start'}`}>
                                 <div className={`max-w-[80%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed ${msg.from === 'user'
-                                        ? 'bg-gradient-to-r from-accent-blue to-accent-violet text-white rounded-br-sm'
-                                        : 'bg-white/10 text-slate-200 rounded-bl-sm'
+                                        ? 'bg-primary text-white rounded-br-sm'
+                                        : 'bg-white text-slate-700 rounded-bl-sm shadow-card'
                                     }`}>
                                     {msg.text}
                                 </div>
@@ -83,10 +82,10 @@ export default function Chatbot() {
                         {/* Suggestions */}
                         {showSuggestions && (
                             <div className="space-y-2 pt-2">
-                                <p className="text-slate-500 text-xs">Quick questions:</p>
+                                <p className="text-slate-400 text-xs">Quick questions:</p>
                                 {faqs.slice(0, 4).map((f) => (
                                     <button key={f.q} onClick={() => handleSend(f.q)}
-                                        className="block w-full text-left text-xs bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl px-3 py-2 text-slate-300 transition-colors">
+                                        className="block w-full text-left text-xs bg-white hover:bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-slate-600 transition-colors">
                                         {f.q}
                                     </button>
                                 ))}
@@ -96,17 +95,17 @@ export default function Chatbot() {
                     </div>
 
                     {/* Input */}
-                    <div className="p-3 border-t border-white/10 flex gap-2">
+                    <div className="p-3 border-t border-slate-200 flex gap-2">
                         <input
                             type="text"
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
                             placeholder="Ask anything..."
-                            className="flex-1 bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-accent-blue"
+                            className="flex-1 bg-slate-100 border border-slate-200 rounded-lg px-3 py-2 text-sm text-secondary placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary"
                         />
                         <button onClick={() => handleSend()}
-                            className="w-9 h-9 bg-gradient-to-br from-accent-blue to-accent-violet rounded-xl flex items-center justify-center hover:opacity-90 transition-opacity">
+                            className="w-9 h-9 bg-primary rounded-lg flex items-center justify-center hover:bg-primary-dark transition-colors">
                             <Send className="w-4 h-4 text-white" />
                         </button>
                     </div>
