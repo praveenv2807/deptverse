@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
 import { X, Send, Bot, Sparkles } from "lucide-react";
 
-// CSE Department-Only Knowledge Base
+// Expanded CSE Department Knowledge Base
 const faqs = [
-  // Greetings
+  // 1. Greetings & Chatbot Scope
   {
     keywords: [
       "hi",
@@ -12,12 +12,33 @@ const faqs = [
       "greetings",
       "good morning",
       "good afternoon",
+      "who are you",
       "help",
     ],
-    q: "Greetings",
-    a: "Hello! 👋 Welcome to the CSE Department AI Assistant. How can I help you today?",
+    q: "Greetings & Bot Info",
+    a: "Hello! 👋 I am DeptBot, your CSE AI Assistant. Ask me about CSE courses, exam results, attendance, labs, faculty, or placements!",
   },
-  // Academics & Exams
+
+  // 2. Department Overview & Programs
+  {
+    keywords: [
+      "program",
+      "course",
+      "degree",
+      "offer",
+      "be",
+      "me",
+      "phd",
+      "curriculum",
+      "intake",
+      "seats",
+      "syllabus",
+    ],
+    q: "What programs does the CSE department offer?",
+    a: "We offer B.E. CSE (4 Years - 180 seats), M.E. CSE (2 Years - 18 seats), and Ph.D. Research Programs in Computer Science.",
+  },
+
+  // 3. Results & IA Marks
   {
     keywords: [
       "result",
@@ -37,6 +58,8 @@ const faqs = [
     q: "Where can I view my CSE IA results?",
     a: "Your CSE Internal Assessment (IA-1 & IA-2) marks and semester grades are published under the 'Results' tab on your portal dashboard.",
   },
+
+  // 4. Attendance Tracking
   {
     keywords: [
       "attendance",
@@ -45,10 +68,13 @@ const faqs = [
       "percentage",
       "bunk",
       "shortage",
+      "eligibility",
     ],
     q: "Where can I check my CSE attendance?",
-    a: "Your CSE subject-wise attendance logs and overall percentage are live-tracked under the 'Attendance' section in your sidebar menu.",
+    a: "Your subject-wise attendance and overall percentage are live-updated under the 'Attendance' section. Minimum 75% is required for exams.",
   },
+
+  // 5. Timetable & Schedule
   {
     keywords: [
       "timetable",
@@ -57,22 +83,13 @@ const faqs = [
       "lecture",
       "period",
       "routine",
+      "timing",
     ],
     q: "Where is my CSE class timetable?",
-    a: "Click on the 'Timetable' tab in the sidebar to view your daily CSE theory classes, lab slots, and faculty allocations.",
+    a: "Click on 'Timetable' in the sidebar menu to view your daily lecture slots, practical labs, and faculty allocations.",
   },
-  {
-    keywords: [
-      "holiday",
-      "holidays",
-      "vacation",
-      "working day",
-      "off",
-      "leave calendar",
-    ],
-    q: "Are there any department holidays?",
-    a: "Official CSE academic notices and holiday announcements are posted under the 'Announcements' tab on your portal sidebar.",
-  },
+
+  // 6. Leave & On-Duty (OD)
   {
     keywords: [
       "leave",
@@ -83,12 +100,13 @@ const faqs = [
       "od",
       "on duty",
       "medical",
+      "event od",
     ],
-    q: "How do I apply for leave or OD in CSE?",
-    a: "Go to 'Leave Request' or 'OD Request' in your sidebar → Fill in dates & reason → Submit for CSE Class Advisor / HOD approval.",
+    q: "How do I apply for Leave or OD in CSE?",
+    a: "Navigate to 'Leave Request' or 'OD Request' in your portal sidebar → Select dates and enter your reason → Submit for Class Advisor approval.",
   },
 
-  // CSE Department Infrastructure & Labs
+  // 7. CSE Labs & Infrastructure
   {
     keywords: [
       "lab",
@@ -103,20 +121,39 @@ const faqs = [
       "systems",
     ],
     q: "What CSE labs are available?",
-    a: "The CSE Department features 10+ state-of-the-art labs: AI & Machine Learning Lab, Cloud Computing Lab, Cyber Security Lab, IoT Lab, and Full-Stack Dev Lab.",
-  },
-  {
-    keywords: ["wifi", "internet", "password", "network", "lab wifi"],
-    q: "How do I connect to CSE Wi-Fi?",
-    a: "Connect to 'DeptVerse_CSE' Wi-Fi using your Roll Number as your username. For password resets, visit the Systems Admin in CSE Lab 3.",
-  },
-  {
-    keywords: ["library", "department library", "books", "journal", "ieee"],
-    q: "Does CSE have a department library?",
-    a: "Yes! The CSE Department Library (Room 104) has over 2,000+ reference books, IEEE journals, and project archives available from 8:30 AM to 5:00 PM.",
+    a: "We have 10+ advanced labs: AI & ML Lab, Cloud Computing Lab, Cyber Security Lab, IoT Lab, Data Analytics Lab, and Full-Stack Dev Lab.",
   },
 
-  // Fees & Admin
+  // 8. CSE Wi-Fi & Internet
+  {
+    keywords: [
+      "wifi",
+      "internet",
+      "password",
+      "network",
+      "connect",
+      "lab wifi",
+    ],
+    q: "How do I connect to CSE Department Wi-Fi?",
+    a: "Select the 'DeptVerse_CSE' network. Log in using your Register/Roll Number as username. Visit Lab 3 System Admin for password resets.",
+  },
+
+  // 9. Department Library
+  {
+    keywords: [
+      "library",
+      "department library",
+      "books",
+      "journal",
+      "ieee",
+      "borrow",
+      "reading room",
+    ],
+    q: "Does CSE have a department library?",
+    a: "Yes! The CSE Department Library (Room 104) offers 2,000+ reference books, IEEE journals, and past project reports from 8:30 AM to 5:00 PM.",
+  },
+
+  // 10. Fee Status & Dues
   {
     keywords: [
       "fee",
@@ -127,10 +164,13 @@ const faqs = [
       "receipt",
       "paid",
       "balance",
+      "fine",
     ],
     q: "How do I check my CSE fee status?",
-    a: "Click on the 'Fee Status' tab in your portal navigation to see paid receipts, tuition dues, and pending lab/department fees.",
+    a: "Click on 'Fee Status' in the portal sidebar to view tuition balance, lab fees, paid transaction history, and downloadable receipts.",
   },
+
+  // 11. HOD & Faculty Directory
   {
     keywords: [
       "hod",
@@ -142,25 +182,13 @@ const faqs = [
       "faculty",
       "staff",
       "advisor",
+      "mentor",
     ],
     q: "How can I contact CSE HOD or Faculty?",
-    a: "Contact HOD at hod.cse@deptverse.edu or visit Block A, Room 101. Faculty emails and office hours are listed under 'Faculty Directory'.",
+    a: "Contact HOD at hod.cse@deptverse.edu or visit Block A, Room 101. Faculty contact details are listed under 'Faculty Directory'.",
   },
-  {
-    keywords: [
-      "program",
-      "course",
-      "degree",
-      "offer",
-      "be",
-      "me",
-      "phd",
-      "curriculum",
-      "syllabus",
-    ],
-    q: "What programs does the CSE department offer?",
-    a: "We offer B.E. Computer Science & Engineering (4 Years), M.E. CSE (2 Years), and Ph.D. Research Programs in CSE.",
-  },
+
+  // 12. Placements & Career
   {
     keywords: [
       "place",
@@ -171,9 +199,396 @@ const faqs = [
       "job",
       "package",
       "internship",
+      "campus drive",
     ],
     q: "How are CSE department placements?",
-    a: "The CSE Department maintains a 95%+ placement rate! Top tech recruiters include TCS, Infosys, Wipro, Accenture, ZoHo, and product startups.",
+    a: "CSE boasts a 95%+ placement record! Top recruiters include TCS, Infosys, Wipro, Accenture, Zoho, Cognizant, and product startups.",
+  },
+
+  // 13. Department Association & Events
+  {
+    keywords: [
+      "association",
+      "symposium",
+      "workshop",
+      "event",
+      "hackathon",
+      "club",
+      "coding club",
+      "tech fest",
+    ],
+    q: "What student activities/clubs are in CSE?",
+    a: "CSE hosts the 'ACE' Student Association, Open-Source Coding Club, Cyber Club, and annual National Technical Symposiums/Hackathons.",
+  },
+
+  // 14. Projects & Research
+  {
+    keywords: [
+      "project",
+      "final year project",
+      "mini project",
+      "guide",
+      "research",
+      "paper",
+      "publication",
+    ],
+    q: "Where do I submit my CSE project proposal?",
+    a: "Project reviews and guide assignments are managed through your Project Coordinator. Check 'Announcements' for submission deadlines.",
+  },
+
+  // 15. Department Announcements
+  {
+    keywords: [
+      "announcement",
+      "notice",
+      "news",
+      "update",
+      "circular",
+      "holiday",
+      "holidays",
+      "vacation",
+      "working day",
+      "off",
+      "leave calendar",
+    ],
+    q: "Where can I view official CSE announcements?",
+    a: "All official department circulars, holiday notices, upcoming guest lectures, and exam timetables are posted in real time under the 'Announcements' tab.",
+  },
+  {
+    keywords: [
+      "hi",
+      "hello",
+      "hey",
+      "greetings",
+      "good morning",
+      "good afternoon",
+      "who are you",
+      "help",
+      "start",
+    ],
+    q: "Greetings & Bot Info",
+    a: "Hello! 👋 I am DeptBot, your official CSE Department AI Assistant. Ask me about CSE courses, exam results, attendance, labs, faculty directory, placements, OD requests, projects, or certifications!",
+  },
+
+  // 2. Department Overview & Programs
+  {
+    keywords: [
+      "program",
+      "course",
+      "degree",
+      "offer",
+      "be",
+      "me",
+      "phd",
+      "curriculum",
+      "intake",
+      "seats",
+      "syllabus",
+      "accreditation",
+      "nba",
+      "naac",
+    ],
+    q: "What programs does the CSE department offer?",
+    a: "The CSE Department offers: 1) B.E. CSE (4 Years - 180 seats), 2) M.E. CSE (2 Years - 18 seats), and 3) Ph.D. Research Programs. The department is NBA accredited and NAAC A++ recognized.",
+  },
+
+  // 3. Results, Marks & Grading
+  {
+    keywords: [
+      "result",
+      "results",
+      "mark",
+      "marks",
+      "grade",
+      "ia",
+      "internal",
+      "ia1",
+      "ia2",
+      "ia3",
+      "exam",
+      "score",
+      "gpa",
+      "cgpa",
+      "arrear",
+      "revaluation",
+    ],
+    q: "Where can I view my CSE IA results & grades?",
+    a: "Your Internal Assessment (IA-1, IA-2) marks and semester CGPA are published under the 'Results' tab on your dashboard. For paper revaluation or arrear exam details, contact the CSE Exam Cell.",
+  },
+
+  // 4. Attendance & Shortage Rules
+  {
+    keywords: [
+      "attendance",
+      "present",
+      "absent",
+      "percentage",
+      "bunk",
+      "shortage",
+      "eligibility",
+      "75",
+      "condonation",
+    ],
+    q: "Where can I check my CSE attendance?",
+    a: "Track subject-wise attendance live under the 'Attendance' tab. Minimum 75% attendance is required to sit for semester end-exams. Between 65-74% requires medical condonation approval.",
+  },
+
+  // 5. Timetable & Schedule
+  {
+    keywords: [
+      "timetable",
+      "schedule",
+      "class",
+      "lecture",
+      "period",
+      "routine",
+      "timing",
+      "hour",
+      "slot",
+    ],
+    q: "Where is my CSE class timetable?",
+    a: "Click on 'Timetable' in the sidebar to view your daily schedule, lecture slots, lab rotations, and assigned faculty.",
+  },
+
+  // 6. Leave & On-Duty (OD) Requests
+  {
+    keywords: [
+      "leave",
+      "apply leave",
+      "permission",
+      "absence",
+      "sick",
+      "od",
+      "on duty",
+      "medical",
+      "event od",
+      "symposium od",
+      "sports od",
+    ],
+    q: "How do I apply for Leave or OD in CSE?",
+    a: "Go to 'Leave Request' or 'OD Request' in the sidebar → Pick your dates & upload proof/reason → Submit for Class Advisor and HOD digital approval.",
+  },
+
+  // 7. CSE Labs & Coordinators
+  {
+    keywords: [
+      "lab",
+      "labs",
+      "facility",
+      "computer",
+      "hardware",
+      "software",
+      "ai lab",
+      "iot",
+      "cloud",
+      "systems",
+      "networks",
+      "data structures lab",
+      "python lab",
+    ],
+    q: "What CSE labs are available?",
+    a: "CSE features 10+ high-tech labs: 1) AI & ML Lab, 2) Cloud Computing Lab, 3) Cyber Security Lab, 4) IoT & Embedded Lab, 5) Full-Stack Web Dev Lab, and 6) Open Source Software Lab.",
+  },
+
+  // 8. CSE Wi-Fi & Technical Support
+  {
+    keywords: [
+      "wifi",
+      "internet",
+      "password",
+      "network",
+      "connect",
+      "lab wifi",
+      "ethernet",
+      "ip address",
+      "system admin",
+    ],
+    q: "How do I connect to CSE Department Wi-Fi?",
+    a: "Connect to 'DeptVerse_CSE' SSID using your Student Register Number as username. For password resets or IP issues, visit the System Admin in CSE Lab 3.",
+  },
+
+  // 9. Department Library & IEEE Access
+  {
+    keywords: [
+      "library",
+      "department library",
+      "books",
+      "journal",
+      "ieee",
+      "borrow",
+      "reading room",
+      "e-books",
+      "access",
+    ],
+    q: "Does CSE have a department library?",
+    a: "Yes! The CSE Department Library (Room 104) has 2,500+ reference books, IEEE Digital Library access, and previous year project reports. Open 8:30 AM – 5:00 PM.",
+  },
+
+  // 10. Fee Status & Online Receipts
+  {
+    keywords: [
+      "fee",
+      "fees",
+      "dues",
+      "payment",
+      "tuition",
+      "receipt",
+      "paid",
+      "balance",
+      "fine",
+      "exam fee",
+      "lab fee",
+    ],
+    q: "How do I check my CSE fee status?",
+    a: "Open the 'Fee Status' tab to view paid receipts, pending tuition/lab dues, exam fees, and download official payment receipts.",
+  },
+
+  // 11. HOD, Faculty Directory & Mentorship
+  {
+    keywords: [
+      "hod",
+      "contact",
+      "head",
+      "office",
+      "room",
+      "email",
+      "faculty",
+      "staff",
+      "advisor",
+      "mentor",
+      "tutor",
+      "cab",
+    ],
+    q: "How can I contact CSE HOD or Faculty Advisors?",
+    a: "HOD Office: Block A, Room 101 | Email: hod.cse@deptverse.edu. For faculty office hours and class advisor details, visit the 'Faculty Directory' section.",
+  },
+
+  // 12. Placements, Internships & Packages
+  {
+    keywords: [
+      "place",
+      "placement",
+      "recruiter",
+      "company",
+      "salary",
+      "job",
+      "package",
+      "internship",
+      "campus drive",
+      "ctc",
+      "zoho",
+      "tcs",
+      "wipro",
+    ],
+    q: "How are CSE department placements?",
+    a: "CSE has a 95%+ placement record with average packages of 4.5 – 12 LPA. Major recruiters include TCS, Infosys, Wipro, Accenture, Zoho, Cognizant, and Tech Mahindra.",
+  },
+
+  // 13. Student Clubs, Associations & Events
+  {
+    keywords: [
+      "association",
+      "symposium",
+      "workshop",
+      "event",
+      "hackathon",
+      "club",
+      "coding club",
+      "tech fest",
+      "ace",
+      "csi",
+      "ieee student branch",
+    ],
+    q: "What student clubs & activities exist in CSE?",
+    a: "We run the 'ACE' (Association of Computer Engineers), Competitive Coding Club, Cyber Security Guild, CSI Student Chapter, and host annual National Hackathons.",
+  },
+
+  // 14. Projects, Seminars & Research Papers
+  {
+    keywords: [
+      "project",
+      "final year project",
+      "mini project",
+      "guide",
+      "research",
+      "paper",
+      "publication",
+      "review",
+      "ppt",
+      "abstract",
+    ],
+    q: "Where do I submit my CSE project proposal?",
+    a: "Project abstracts, guide selection, and zero-review PPTs are managed via the 'My Requests' tab. Check 'Announcements' for submission deadlines.",
+  },
+
+  // 15. Free Certifications & Skill Development
+  {
+    keywords: [
+      "nptel",
+      "coursera",
+      "certification",
+      "credit",
+      "value added",
+      "course",
+      "skill",
+      "aws",
+      "cisco",
+      "redhat",
+    ],
+    q: "Does CSE offer value-added certifications?",
+    a: "Yes! Students can earn credits via NPTEL/SWAYAM, AWS Cloud Foundations, Cisco CCNA, RedHat Linux, and Oracle Java certification drives.",
+  },
+
+  // 16. Department Announcements & Circulars
+  {
+    keywords: [
+      "announcement",
+      "notice",
+      "news",
+      "update",
+      "circular",
+      "holiday",
+      "holidays",
+      "vacation",
+      "working day",
+      "off",
+      "calendar",
+    ],
+    q: "Where can I view official CSE announcements?",
+    a: "All official department notices, exam schedules, workshop alerts, and academic holiday circulars are published live under the 'Announcements' tab.",
+  },
+
+  // 17. Electives & Fast-Track Scheme
+  {
+    keywords: [
+      "elective",
+      "electives",
+      "fasttrack",
+      "fast track",
+      "professional elective",
+      "open elective",
+      "honors",
+      "minors",
+    ],
+    q: "How do I choose my professional electives?",
+    a: "Elective registration opens at the start of Semesters 5, 6, and 7 under the 'Elective Selection' portal tab. Fast-track options are open for high CGPA (>8.0) students.",
+  },
+
+  // 18. Portal Login & Password Issues
+  {
+    keywords: [
+      "login",
+      "password",
+      "reset",
+      "forgot",
+      "error",
+      "account",
+      "profile",
+      "bug",
+      "portal problem",
+    ],
+    q: "What if I face portal login issues?",
+    a: "If you are locked out or need a password reset, visit the Department System Administrator in Room 103 or contact support@deptverse.edu.",
   },
 ];
 
@@ -230,7 +645,7 @@ export default function AIChatbot() {
     setTimeout(() => {
       const botResponse = matchedFaq
         ? matchedFaq.a
-        : `I couldn't find a CSE-specific answer for "${userQuery}". Try asking about Results, CSE Labs, Attendance, HOD Contact, or Placements!`;
+        : `I couldn't find a CSE-specific answer for "${userQuery}". Try asking about Results, CSE Labs, Attendance, HOD Contact, Fees, or Placements!`;
 
       setMessages((prev) => [
         ...prev,
@@ -326,6 +741,7 @@ export default function AIChatbot() {
               "Attendance",
               "Leave",
               "Placements",
+              "Wi-Fi",
               "Contact HOD",
             ].map((chip) => (
               <button
