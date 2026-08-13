@@ -48,7 +48,6 @@ const facultyLinks = [
     { label: 'My Requests', icon: ClipboardList, path: '/portal/faculty/my-requests' },
 ];
 
-
 const adminLinks = [
     { label: 'Dashboard', icon: LayoutDashboard, path: '/portal/admin' },
     { label: 'Announcements', icon: BellRing, path: '/portal/announcements' },
@@ -114,12 +113,15 @@ export default function PortalLayout() {
             <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-slate-900/95 backdrop-blur-md border-r border-white/10 transform transition-transform duration-300 shadow-xl
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 lg:static lg:inset-auto`}>
 
-                {/* Logo */}
+                {/* Logo & Portal Role Badge Header */}
                 <div className="p-6 border-b border-white/10">
-                    <Link to="/" className="flex items-center gap-2">
+                    {/* 📍 Stacked flex-col container puts Portal Name directly under Logo */}
+                    <Link to="/" className="flex flex-col items-start gap-1">
                         <Logo size="sm" />
-                        <div>
-                            <span className="text-white font-heading font-bold">{role} Portal</span>
+                        <div className="mt-1">
+                            <span className="text-purple-400 font-heading font-semibold text-xs tracking-wide uppercase">
+                                {role} Portal
+                            </span>
                         </div>
                     </Link>
                 </div>
@@ -127,14 +129,14 @@ export default function PortalLayout() {
                 {/* Role Badge */}
                 <div className="px-4 py-4">
                     <div className="bg-white/10 rounded-lg p-3 flex items-center gap-3">
-                        <div className={`w-10 h-10 rounded-lg ${roleColor} flex items-center justify-center text-white font-bold text-sm`}>
+                        <div className={`w-10 h-10 rounded-lg ${roleColor} flex items-center justify-center text-white font-bold text-sm shrink-0`}>
                             {role === 'Student' ? 'ST' : role === 'Faculty' ? 'FC' : 'AD'}
                         </div>
                         <div>
-                            <p className="text-white text-sm font-semibold">
+                            <p className="text-white text-sm font-semibold leading-tight">
                                 {role === 'Student' ? 'Arun Kumar' : role === 'Faculty' ? 'Dr. Meenakshi' : 'Administrator'}
                             </p>
-                            <p className="text-white/50 text-xs">{role}</p>
+                            <p className="text-white/50 text-xs mt-0.5">{role}</p>
                         </div>
                     </div>
                 </div>

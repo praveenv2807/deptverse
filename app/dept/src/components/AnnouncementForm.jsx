@@ -1,114 +1,160 @@
-import React, { useState, useContext } from "react";
-import { AnnouncementContext } from "../context/AnnouncementContext";
-import { X } from "lucide-react";
+import React, { useState } from "react";
+import { X, Calendar, FileText, PartyPopper, Briefcase } from "lucide-react";
 
-const announcementTypes = [
-  { id: "Holiday", label: "Holiday", icon: "🎉", color: "bg-yellow-500" },
-  { id: "Exam", label: "Exam Schedule", icon: "📝", color: "bg-red-500" },
-  { id: "Event", label: "Event", icon: "🎪", color: "bg-purple-500" },
-  { id: "Placement", label: "Placement Drive", icon: "💼", color: "bg-green-500" }
+const typeOptions = [
+  { id: "Holiday", label: "Holiday", icon: "🎉" },
+  { id: "Exam", label: "Exam Schedule", icon: "📝" },
+  { id: "Event", label: "Event", icon: "🎪" },
+  { id: "Placement", label: "Placement Drive", icon: "💼" },
 ];
 
-function AnnouncementForm({ role, onClose }) {
-  const { addAnnouncement } = useContext(AnnouncementContext);
-  const [formData, setFormData] = useState({
-    type: "Event",
-    title: "",
-    content: "",
-    priority: "normal"
-  });
+export default function AnnouncementForm({ role, onClose, onSuccess }) {
+  const [selectedType, setSelectedType] = useState("Event");
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [priority, setPriority] = useState("Normal");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.title || !formData.content) return;
 
-    addAnnouncement({
-      ...formData,
-      postedBy: role
-    });
+    if (!title.trim() || !content.trim()) {
+      alert("Please fill in both title and content!");
+      return;
+    }
 
-    onClose();
+    const newAnnouncement = {
+      id: Date.now(),
+      title: title.trim(),
+      category: selectedType, // Matches "Holiday", "Exam", "Event", "Placement"
+      content: content.trim(),
+      isUrgent: priority === "Urgent" || priority === "High",
+      postedBy: role || "Admin",
+      date: new Date().toISOString().split("T")[0],
+    };
+
+    // Save to local storage
+    try {
+      const existing = JSON.parse(
+        localStorage.getItem("dept_announcements") || "[]",
+      );
+      localStorage.setItem(
+        "dept_announcements",
+        JSON.stringify([newAnnouncement, ...existing]),
+      );
+    } catch (err) {
+      console.error("Failed to save announcement:", err);
+    }
+
+    // Reset inputs & close/refresh parent
+    setTitle("");
+    setContent("");
+    if (onSuccess) onSuccess();
   };
 
-  const selectedType = announcementTypes.find(t => t.id === formData.type);
-
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="relative overflow-hidden bg-slate-900/90 backdrop-blur-xl rounded-2xl p-6 border border-white/10 shadow-2xl mb-6">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-6 pb-2 border-b border-white/10">
         <div className="flex items-center gap-3">
-          <div className={`w-10 h-10 ${selectedType?.color} rounded-lg flex items-center justify-center text-xl`}>
-            {selectedType?.icon}
+          <div className="w-10 h-10 bg-purple-500/20 rounded-xl flex items-center justify-center text-xl">
+            🎪
           </div>
-          <h2 className="text-xl font-bold font-heading text-white">
+          <h3 className="text-xl font-bold text-white font-heading">
             Post Announcement
-          </h2>
+          </h3>
         </div>
-        <button onClick={onClose} className="text-white/50 hover:text-white">
-          <X className="w-5 h-5" />
-        </button>
+        {onClose && (
+          <button
+            type="button"
+            onClick={onClose}
+            className="text-white/40 hover:text-white p-1 rounded-lg transition-colors"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        )}
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-5">
+        {/* Type Options Grid */}
         <div>
-          <label className="text-white/70 text-sm mb-2 block">Type</label>
-          <div className="grid grid-cols-2 gap-2">
-            {announcementTypes.map((type) => (
-              <button
-                key={type.id}
-                type="button"
-                onClick={() => setFormData({ ...formData, type: type.id })}
-                className={`p-3 rounded-lg border text-left transition-all ${
-                  formData.type === type.id
-                    ? `${type.color} border-transparent text-white`
-                    : 'border-white/20 text-white/70 hover:border-white/30'
-                }`}
-              >
-                <span className="mr-2">{type.icon}</span>
-                {type.label}
-              </button>
-            ))}
+          <label className="text-sm text-white/70 block mb-2 font-medium">
+            Type
+          </label>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {typeOptions.map((opt) => {
+              const isSelected = selectedType === opt.id;
+              return (
+                <button
+                  key={opt.id}
+                  type="button"
+                  onClick={() => setSelectedType(opt.id)}
+                  className={`flex items-center gap-3 p-3.5 rounded-xl border transition-all text-left font-medium ${
+                    isSelected
+                      ? "bg-purple-600/90 text-white border-purple-400 shadow-lg shadow-purple-500/20"
+                      : "bg-slate-800/40 text-white/80 border-white/10 hover:bg-slate-800/70"
+                  }`}
+                >
+                  <span className="text-lg">{opt.icon}</span>
+                  <span className="text-sm">{opt.label}</span>
+                </button>
+              );
+            })}
           </div>
         </div>
 
+        {/* Title Input */}
         <div>
-          <label className="text-white/70 text-sm mb-2 block">Title</label>
+          <label className="text-sm text-white/70 block mb-2 font-medium">
+            Title
+          </label>
           <input
             type="text"
-            value={formData.title}
-            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
             placeholder="Enter announcement title"
-            className="w-full p-3 rounded-lg bg-slate-900/60 border border-white/20 text-white placeholder-slate-500 focus:outline-none focus:border-blue-400 transition-colors"
+            className="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-white/10 text-white placeholder-white/30 focus:outline-none focus:border-blue-500 transition-colors text-sm"
             required
           />
         </div>
 
+        {/* Content Input */}
         <div>
-          <label className="text-white/70 text-sm mb-2 block">Content</label>
+          <label className="text-sm text-white/70 block mb-2 font-medium">
+            Content
+          </label>
           <textarea
-            value={formData.content}
-            onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
             placeholder="Enter announcement details"
-            rows="4"
-            className="w-full p-3 rounded-lg bg-slate-900/60 border border-white/20 text-white placeholder-slate-500 focus:outline-none focus:border-blue-400 transition-colors resize-none"
+            rows="3"
+            className="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-white/10 text-white placeholder-white/30 focus:outline-none focus:border-blue-500 transition-colors text-sm resize-none"
             required
           />
         </div>
 
+        {/* Priority Dropdown */}
         <div>
-          <label className="text-white/70 text-sm mb-2 block">Priority</label>
+          <label className="text-sm text-white/70 block mb-2 font-medium">
+            Priority
+          </label>
           <select
-            value={formData.priority}
-            onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
-            className="w-full p-3 rounded-lg bg-slate-900/60 border border-white/20 text-white focus:outline-none focus:border-blue-400 transition-colors"
+            value={priority}
+            onChange={(e) => setPriority(e.target.value)}
+            className="w-full px-4 py-3 rounded-xl bg-slate-800/80 border border-white/10 text-white focus:outline-none focus:border-blue-500 transition-colors text-sm cursor-pointer"
           >
-            <option value="normal">Normal</option>
-            <option value="high">High Priority</option>
+            <option value="Normal" className="bg-slate-900 text-white">
+              Normal
+            </option>
+            <option value="Urgent" className="bg-slate-900 text-white">
+              Urgent
+            </option>
           </select>
         </div>
 
+        {/* Submit Button */}
         <button
           type="submit"
-          className="w-full bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors font-semibold"
+          className="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-2.5 px-3 text-sm rounded-lg transition-all shadow-md shadow-blue-600/30"
         >
           Post Announcement
         </button>
@@ -116,5 +162,3 @@ function AnnouncementForm({ role, onClose }) {
     </div>
   );
 }
-
-export default AnnouncementForm;
