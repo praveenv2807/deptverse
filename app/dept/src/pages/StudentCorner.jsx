@@ -11,7 +11,7 @@ const clubs = [
 
 const alumni = [
     { name: 'Aakash Ramesh', batch: '2018', company: 'Google', role: 'Software Engineer', package: '₹42 LPA' },
-    { name: 'Velan', batch: '2019', company: 'Microsoft', role: 'Senior Dev', package: '₹38 LPA' },
+    { name: 'Priya Sharma', batch: '2019', company: 'Microsoft', role: 'Senior Dev', package: '₹38 LPA' },
     { name: 'Naveen Kumar', batch: '2017', company: 'Startup (YC funded)', role: 'CTO & Co-Founder', package: '—' },
     { name: 'Dhivya Priya', batch: '2020', company: 'Amazon', role: 'SDE-II', package: '₹28 LPA' },
 ]
