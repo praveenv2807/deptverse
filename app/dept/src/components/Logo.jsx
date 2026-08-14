@@ -5,29 +5,30 @@ export default function Logo({
   showText = true,
   className = "",
 }) {
-  // Ultra-large image sizes with original text scale
+  // Doubled (2x) image size presets
   const sizes = {
-    sm: { icon: "w-20 h-20", text: "text-base" },
-    default: { icon: "w-36 h-36", text: "text-xl" }, // <-- Huge 144px Logo Picture!
-    lg: { icon: "w-48 h-48", text: "text-2xl" }, // <-- Giant 192px Logo Picture!
+    sm: { icon: "w-16 h-16", text: "text-sm", sub: "text-[9px]" },
+    default: { icon: "w-24 h-24", text: "text-lg", sub: "text-[10px]" }, // Doubled to 96px!
+    lg: { icon: "w-32 h-32", text: "text-2xl", sub: "text-xs" }, // Doubled to 128px!
+    xl: { icon: "w-48 h-48", text: "text-4xl", sub: "text-sm" }, // Doubled to 192px!
   };
 
   const s = sizes[size] || sizes.default;
 
   return (
     <div className={`flex items-center gap-4 ${className}`}>
-      {/* Huge Image Logo Container */}
+      {/* 2x Scaled Transparent Logo Container */}
       <div
         className={`${s.icon} relative flex items-center justify-center shrink-0`}
       >
         <img
-          src="/ksreilogo.png"
-          alt="KSREI Logo"
-          className="w-full h-full object-contain drop-shadow-2xl transform hover:scale-105 transition-transform duration-200"
+          src="/ksrcecselogo.png"
+          alt="KSRCE CSE Logo"
+          className="w-full h-full object-contain filter drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)] transform hover:scale-105 transition-transform duration-200"
         />
       </div>
 
-      {/* Standard Text */}
+      {/* Brand & Department Text */}
       {showText && (
         <div className="flex flex-col leading-tight">
           <span className={`${s.text} font-heading font-bold tracking-wide`}>
@@ -36,7 +37,9 @@ export default function Logo({
               Verse
             </span>
           </span>
-          <span className="text-white/50 text-[10px] font-semibold tracking-widest uppercase">
+          <span
+            className={`text-white/50 ${s.sub} font-semibold tracking-widest uppercase`}
+          >
             CSE Department
           </span>
         </div>
