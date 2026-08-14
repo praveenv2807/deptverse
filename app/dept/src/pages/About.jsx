@@ -97,7 +97,7 @@ export default function About() {
                                 <div>
                                     <p className="text-white font-bold font-heading text-xl">Dr. V. Sharmila</p>
                                     <p className="text-blue-300 font-medium">Professor & Head, Department of CSE</p>
-                                    <p className="text-white/50 text-sm mt-1">Ph.D (CSE), IIT Madras | 22 Years Experience</p>
+                                    <p className="text-white/50 text-sm mt-1">Ph.D (CSE), | 22 Years Experience</p>
                                 </div>
                             </div>
                         </div>
