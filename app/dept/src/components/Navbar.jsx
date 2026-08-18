@@ -24,6 +24,7 @@ const navItems = [
       { label: "Programming Practice", path: "/practice" },
     ],
   },
+  { label: "E-Learning", path: "/elearning-hub" },
   { label: "Placements", path: "/placements" },
   { label: "Events", path: "/events" },
   { label: "Student Corner", path: "/student-corner" },

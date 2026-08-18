@@ -1,7 +1,9 @@
-import React from 'react'
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import MainLayout from './layouts/MainLayout'
-import PortalLayout from './layouts/PortalLayout'
+import React from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import MainLayout from "./layouts/MainLayout";
+import PortalLayout from "./layouts/PortalLayout";
+
+// Module Imports
 import LeaveRequest from "./modules/LeaveRequest";
 import ODRequest from "./modules/ODRequest";
 import FacultyLeaveApproval from "./modules/FacultyLeaveApproval";
@@ -10,26 +12,26 @@ import FacultyLeaveRequest from "./modules/FacultyLeaveRequest";
 import AdminLeaveApproval from "./modules/AdminLeaveApproval";
 import MyRequests from "./modules/MyRequests";
 import Announcements from "./modules/Announcements";
+
 // Public Pages
-import Home from './pages/Home'
-import About from './pages/About'
-import Programs from './pages/Programs'
-import Faculty from './pages/Faculty'
-import CurriculumLabs from './pages/CurriculumLabs'
-import Research from './pages/Research'
-import Placements from './pages/Placements'
-import Events from './pages/Events'
-import StudentCorner from './pages/StudentCorner'
-import ELearning from './pages/eLearning'
-import Practice from './pages/Practice'
-import Login from './pages/Login'
-
-
+import Home from "./pages/Home";
+import About from "./pages/About";
+import Programs from "./pages/Programs";
+import Faculty from "./pages/Faculty";
+import CurriculumLabs from "./pages/CurriculumLabs";
+import Research from "./pages/Research";
+import Placements from "./pages/Placements";
+import Events from "./pages/Events";
+import StudentCorner from "./pages/StudentCorner";
+import ELearning from "./pages/eLearning";
+import Practice from "./pages/Practice";
+import Login from "./pages/Login";
+import ELearningHub from "./pages/ELearningHub";
 
 // Portal Pages
-import StudentDashboard from './pages/portal/StudentDashboard'
-import FacultyDashboard from './pages/portal/FacultyDashboard'
-import AdminPanel from './pages/portal/AdminPanel'
+import StudentDashboard from "./pages/portal/StudentDashboard";
+import FacultyDashboard from "./pages/portal/FacultyDashboard";
+import AdminPanel from "./pages/portal/AdminPanel";
 
 function App() {
   return (
@@ -48,6 +50,7 @@ function App() {
           <Route path="/student-corner" element={<StudentCorner />} />
           <Route path="/elearning" element={<ELearning />} />
           <Route path="/practice" element={<Practice />} />
+          <Route path="/elearning-hub" element={<ELearningHub />} />
         </Route>
 
         {/* Auth */}
@@ -67,14 +70,29 @@ function App() {
           <Route path="od" element={<ODRequest />} />
 
           {/* Faculty Approvals */}
-          <Route path="faculty-leave-approval" element={<FacultyLeaveApproval />} />
+          <Route
+            path="faculty-leave-approval"
+            element={<FacultyLeaveApproval />}
+          />
           <Route path="faculty-od-approval" element={<FacultyODApproval />} />
-          <Route path="faculty-leave-request" element={<FacultyLeaveRequest />} />
+          <Route
+            path="faculty-leave-request"
+            element={<FacultyLeaveRequest />}
+          />
 
           {/* My Requests */}
-          <Route path="student/my-requests" element={<MyRequests role="Student" />} />
-          <Route path="faculty/my-requests" element={<MyRequests role="Faculty" />} />
-          <Route path="admin/my-requests" element={<MyRequests role="Admin" />} />
+          <Route
+            path="student/my-requests"
+            element={<MyRequests role="Student" />}
+          />
+          <Route
+            path="faculty/my-requests"
+            element={<MyRequests role="Faculty" />}
+          />
+          <Route
+            path="admin/my-requests"
+            element={<MyRequests role="Admin" />}
+          />
 
           {/* Admin Approvals */}
           <Route path="admin-leave-approval" element={<AdminLeaveApproval />} />
@@ -87,7 +105,7 @@ function App() {
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
-  )
+  );
 }
 
-export default App
+export default App;
