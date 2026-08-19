@@ -87,7 +87,7 @@ export default function About() {
                         <div className="flex flex-col md:flex-row gap-8 items-start">
                             <div className="flex-shrink-0">
                                 <div className="w-28 h-28 rounded-xl bg-blue-500 flex items-center justify-center text-white font-bold font-heading text-3xl">
-                                    RK
+                                    vs
                                 </div>
                             </div>
                             <div>
