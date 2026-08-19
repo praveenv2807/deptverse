@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Upload, FileText, Download, Filter, FileCode } from "lucide-react";
+import {
+  Upload,
+  Download,
+  Filter,
+  FileCode,
+  User,
+  Calendar,
+  Key,
+  Clock,
+} from "lucide-react";
 import { supabase } from "../supabaseClient";
 
 export default function ELearningHub() {
@@ -14,7 +23,12 @@ export default function ELearningHub() {
   // Form Inputs
   const [title, setTitle] = useState("");
   const [subject, setSubject] = useState("");
+  const [facultyName, setFacultyName] = useState("");
+  const [passcode, setPasscode] = useState("");
   const [file, setFile] = useState(null);
+
+  // Secret passcode to authorize uploads
+  const SECRET_PASSCODE = "cse123";
 
   // Fetch Materials from Supabase
   const fetchMaterials = async () => {
@@ -38,7 +52,15 @@ export default function ELearningHub() {
   // Upload File to Supabase Storage & Database
   const handleUpload = async (e) => {
     e.preventDefault();
-    if (!file || !title || !subject) return alert("Please fill in all fields!");
+
+    // 1. Secret Passcode Validation
+    if (passcode !== SECRET_PASSCODE) {
+      return alert("Invalid Secret Passcode! Access denied.");
+    }
+
+    if (!file || !title || !subject || !facultyName) {
+      return alert("Please fill in all fields!");
+    }
 
     try {
       setUploading(true);
@@ -46,18 +68,21 @@ export default function ELearningHub() {
       const fileName = `${Date.now()}.${fileExt}`;
       const filePath = `notes/${fileName}`;
 
+      // Upload file to Supabase Storage Bucket ('elearning-materials')
       const { error: uploadError } = await supabase.storage
-        .from("materials")
+        .from("elearning-materials")
         .upload(filePath, file);
 
       if (uploadError) throw uploadError;
 
+      // Get public URL of the uploaded file
       const { data: publicUrlData } = supabase.storage
-        .from("materials")
+        .from("elearning-materials")
         .getPublicUrl(filePath);
 
       const fileUrl = publicUrlData.publicUrl;
 
+      // Insert metadata into database
       const { error: dbError } = await supabase
         .from("elearning_materials")
         .insert([
@@ -68,7 +93,7 @@ export default function ELearningHub() {
             title,
             file_type: fileExt.toUpperCase(),
             file_url: fileUrl,
-            uploaded_by: "Faculty",
+            uploaded_by: facultyName,
           },
         ]);
 
@@ -77,6 +102,8 @@ export default function ELearningHub() {
       alert("Material uploaded successfully!");
       setTitle("");
       setSubject("");
+      setFacultyName("");
+      setPasscode("");
       setFile(null);
       setShowUploadForm(false);
       fetchMaterials();
@@ -85,6 +112,19 @@ export default function ELearningHub() {
     } finally {
       setUploading(false);
     }
+  };
+
+  // Helper to format timestamps into readable Date & Time
+  const formatDateTime = (timestamp) => {
+    if (!timestamp) return "Just now";
+    const date = new Date(timestamp);
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
   };
 
   return (
@@ -114,7 +154,7 @@ export default function ELearningHub() {
             onClick={() => setShowUploadForm(!showUploadForm)}
             className="bg-blue-600 hover:bg-blue-500 text-white text-xs px-3.5 py-2 rounded-lg font-medium flex items-center gap-1.5 transition shadow-sm"
           >
-            <Upload className="w-3.5 h-3.5" />{" "}
+            <Upload className="w-3.5 h-3.5" />
             {showUploadForm ? "Cancel Upload" : "Upload Material"}
           </button>
         </div>
@@ -182,20 +222,40 @@ export default function ELearningHub() {
             >
               <input
                 type="text"
-                placeholder="Subject Name (e.g., Computer Networks)"
+                placeholder="Faculty Name (e.g., Dr. Aris)"
+                value={facultyName}
+                onChange={(e) => setFacultyName(e.target.value)}
+                className="p-2 rounded bg-slate-900 border border-white/10 text-white text-xs placeholder-white/40 focus:outline-none focus:border-blue-500"
+                required
+              />
+
+              <input
+                type="password"
+                placeholder="Secret Passcode (deptverse2024)"
+                value={passcode}
+                onChange={(e) => setPasscode(e.target.value)}
+                className="p-2 rounded bg-slate-900 border border-white/10 text-white text-xs placeholder-white/40 focus:outline-none focus:border-blue-500"
+                required
+              />
+
+              <input
+                type="text"
+                placeholder="Subject Name (e.g., Theory of Computation)"
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
                 className="p-2 rounded bg-slate-900 border border-white/10 text-white text-xs placeholder-white/40 focus:outline-none focus:border-blue-500"
                 required
               />
+
               <input
                 type="text"
-                placeholder="Document Title (e.g., Unit 1 Lecture Notes)"
+                placeholder="Document Title / Unit (e.g., Unit 1 - NFA & DFA)"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 className="p-2 rounded bg-slate-900 border border-white/10 text-white text-xs placeholder-white/40 focus:outline-none focus:border-blue-500"
                 required
               />
+
               <input
                 type="file"
                 onChange={(e) => setFile(e.target.files[0])}
@@ -203,12 +263,13 @@ export default function ELearningHub() {
                 accept=".pdf,.ppt,.pptx,.doc,.docx"
                 required
               />
+
               <button
                 type="submit"
                 disabled={uploading}
                 className="md:col-span-2 bg-emerald-600 hover:bg-emerald-500 py-2 rounded text-xs font-semibold text-white transition disabled:opacity-50"
               >
-                {uploading ? "Processing File..." : "Upload Document"}
+                {uploading ? "Uploading File..." : "Submit & Upload Material"}
               </button>
             </motion.form>
           )}
@@ -235,17 +296,25 @@ export default function ELearningHub() {
                   <div>
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-[10px] bg-blue-500/10 text-blue-400 border border-blue-500/20 px-1.5 py-0.5 rounded font-mono font-medium">
-                        {item.file_type}
+                        {item.file_type || "PDF"}
                       </span>
-                      <span className="text-[11px] text-white/40">
-                        By {item.uploaded_by || "Faculty"}
+                      <span className="text-[10px] text-white/50 flex items-center gap-1">
+                        <User className="w-3 h-3 text-emerald-400" />
+                        {item.uploaded_by || "Faculty"}
                       </span>
                     </div>
+
                     <h4 className="font-semibold text-white text-xs mb-1 line-clamp-1 group-hover:text-blue-300 transition-colors">
                       {item.title}
                     </h4>
-                    <p className="text-[11px] text-white/50 mb-3 line-clamp-1">
+
+                    <p className="text-[11px] text-white/50 mb-2 line-clamp-1">
                       {item.subject}
+                    </p>
+
+                    <p className="text-[10px] text-white/40 mb-3 flex items-center gap-1">
+                      <Clock className="w-2.5 h-2.5 text-blue-400" />
+                      {formatDateTime(item.created_at)}
                     </p>
                   </div>
 
